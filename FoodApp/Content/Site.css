@@ -22,3 +22,51 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.mt10{
+   margin-top: 10px;
+}
+.ml10{
+   margin-left: 10px;
+}
+
+.add-tag{
+    padding: 6px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #468847;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    cursor:pointer;
+}
+
+.new-tag-section{
+    background: rgba(76, 175, 80, 0.07058823529411765);
+    position: relative;
+}
+
+.close-tag-section{
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    font-size: 25px;
+    color: #f44336ab;
+    cursor: pointer;
+}
+
+.create-new-tag{
+    margin-bottom: 10px;
+    font-size: 17px;
+    color: green;
+}
+
+.hidden{
+    display:none;
+}
+
+.flex{
+    display: flex;
+    align-items: baseline;
+}
