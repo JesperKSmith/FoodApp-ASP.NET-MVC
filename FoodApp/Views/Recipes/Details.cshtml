@@ -19,6 +19,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.Picture)
+        </dt>
+
+        <dd>
+            <img src="@Url.Content(Model.Picture)" alt="Image" />
+        </dd>
+       
+        <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
