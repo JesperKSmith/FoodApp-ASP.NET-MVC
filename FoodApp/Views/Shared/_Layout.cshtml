@@ -7,11 +7,12 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/bootstrap-multiselect-css")
+    @Styles.Render("~/Content/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
-
+    @Scripts.Render("~/bundles/angular")
 
 </head>
-<body>
+<body ng-app="foodApp" ng-controller="myCtrl">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
