@@ -35,7 +35,17 @@ namespace FoodApp
                     "~/Scripts/bootstrap-multiselect.js"
                 ));
 
-            
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                   "~/Scripts/angular.js",
+                   "~/Scripts/food_app.js"
+               ));
+
+            bundles.Add(new StyleBundle("~/Content/fontawesome").Include(
+                    "~/Content/fontawesome.css"
+                ));
+
+
+
         }
     }
 }
