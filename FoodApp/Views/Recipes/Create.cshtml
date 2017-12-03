@@ -4,16 +4,14 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
-<link href="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
+<h3>Create Recipe 👨‍🍳</h3>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Recipes", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
     
     <div class="form-horizontal">
-        <h4>Recipe</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -45,8 +43,13 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Recipe.Picture, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Recipe.Picture, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Recipe.Picture, "", new { @class = "text-danger" })
+                 <input type="file" name="file" accept="image/x-png,image/gif,image/jpeg" class="btn-image-select" />
+                <!-- @Html.EditorFor(model => model.Recipe.Picture, new { htmlAttributes = new { @class = "form-control" } })-->
+                <!-- @Html.ValidationMessageFor(model => model.Recipe.Picture, "", new { @class = "text-danger" })-->
+                
+            </div>
+            <div class="col-md-10 mt10 recipe-image-container hidden">
+                <img class="recipe-image" src="http://via.placeholder.com/350x150" alt="Recipe" />
             </div>
         </div>
 
@@ -55,9 +58,15 @@
             <div class="col-md-10">
                 @Html.ListBoxFor(model => model.TagIds, Model.AllTags, new { @class = "listbox", @multiple="multiple" })
             </div>
+            <div class="col-md-10 col-md-offset-2 mt10 flex">
+                <div>
+                    <span>Didn't find suitable tag? <span>
+                </div>
+                <div class="add-tag ml10" ng-click="showTagCreateForm=!showTagCreateForm">
+                    Add new new tag here...
+                </div> 
+            </div>
         </div>    
-        
-        
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -66,20 +75,34 @@
         </div>
     </div>
 }
-<h2>Add Tags!</h2>
-@using (Html.BeginForm("AddTag", "Recipes"))
-{
-    @Html.AntiForgeryToken() {
-        <div class="form-group">
-            @Html.LabelFor(model => model.Tag, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Tag.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Tag.Name, "", new { @class = "text-danger" })
+
+
+ <!-- CREATE TAG SECTION -->
+<div ng-if="showTagCreateForm" class="form-horizontal new-tag-section">
+    <hr />
+    @using (Html.BeginForm("AddTag", "Recipes"))
+            {
+        @Html.AntiForgeryToken() {
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2 create-new-tag">
+                    Create new Tag
+                </div>
+                @Html.LabelFor(model => model.Tag, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Tag.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Tag name...." } })
+                    @Html.ValidationMessageFor(model => model.Tag.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-10 col-md-offset-2 mt10">
+                    <button type="submit" class="btn btn-success">Create Tag</button>
+                </div>
             </div>
-            <button type="submit" class="btn btn-default">Add Tag</button>
-        </div>
+        }
     }
-}
+    <hr />
+</div>
+
+
+  
 
 
 <div>
@@ -97,4 +120,21 @@
             includeSelectAllOption: true
         });
     });
+
+
+    // IMAGE UPLOAD
+    $(document).on("change", ".btn-image-select", function () {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(this.files[0]);
+
+        reader.onload = function (e) {
+            // make picture visible
+            $('.recipe-image-container').removeClass('hidden');
+            $('.recipe-image').attr("src", e.target.result);
+        }
+    });
+
+    //------------------------------------------------------------------------
+
 </script>

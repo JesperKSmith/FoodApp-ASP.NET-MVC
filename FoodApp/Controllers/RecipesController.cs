@@ -10,6 +10,7 @@ using FoodApp.Models;
 using FoodApp.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.IO;
 
 namespace FoodApp.Controllers
 {
@@ -22,7 +23,8 @@ namespace FoodApp.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            return View(db.Recipes.ToList());
+            var recipes = db.Recipes.ToList();
+            return View(recipes);
         }
 
         // GET: Recipes/Details/5
@@ -59,13 +61,19 @@ namespace FoodApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(RecipeViewModel rvm)
         {
-
             var selectedTags = rvm.TagIds;
             rvm.Recipe.Tags = db.Tags.Where(m => selectedTags.Contains(m.Id)).ToList();
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            
 
-
+            // If the request contains picture file
+            if (Request.Files.Count > 0)
+            {
+                rvm.Recipe.Picture = savedImageName();
+            }
+            else
+            {
+                rvm.Recipe.Picture = getDefaultPictureName();
+            }
 
             if (ModelState.IsValid)
             {
@@ -154,5 +162,45 @@ namespace FoodApp.Controllers
             db.SaveChanges();
             return RedirectToAction("Create", "Recipes");
         }
+
+
+        // ======================================================================
+        // PRIVATE FUNCTIONS
+
+        // SAVE IMAGE
+        private string savedImageName()
+        {
+            var file = Request.Files[0];
+            string pictureName = "";
+
+            var pictureType = file.ContentType;
+
+            if (!pictureType.Contains("image"))
+            {
+                var notImage = true;
+            }
+            else
+            {
+                var image = true;
+            }
+
+            if (file != null && file.ContentLength > 0)
+            {
+                pictureName = Path.GetFileName(file.FileName);
+                var pathToFile = Path.Combine(Server.MapPath("~/Images/"), pictureName);
+                file.SaveAs(pathToFile);
+            }
+
+            return "~/Images/" + pictureName;
+        }
+
+        private string getDefaultPictureName()
+        {
+            return "~/Images/default.png";
+        }
+
     }
-}
+
+    }
+
+
