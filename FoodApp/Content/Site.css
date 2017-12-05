@@ -70,3 +70,18 @@ textarea {
     display: flex;
     align-items: baseline;
 }
+
+/* RECIPE MODAL RELATED */
+
+#new-recipe-title{
+    color: rgb(3, 169, 244);
+    cursor: pointer;
+}
+
+#new-recipe-picture{
+     width: 100%;
+}
+
+#new-recipe-description{
+    margin-top: 10px;
+}
