@@ -17,7 +17,7 @@ namespace FoodApp.Models
         public string Title { get; set; }
 
         [Required]
-        [StringLength(500, MinimumLength = 50, ErrorMessage = "Must be between 50 and 500 characters")]
+        [StringLength(500, MinimumLength = 20, ErrorMessage = "Must be between 50 and 500 characters")]
         public string Description { get; set; }
 
         [Required]
