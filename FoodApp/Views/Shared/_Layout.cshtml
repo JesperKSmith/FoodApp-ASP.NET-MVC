@@ -33,9 +33,14 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @Scripts.Render("~/bundles/jquery")
 
+    <!-- NEW Recipe Modal start -->
+        @Html.Partial("_newRecipeModal")
+    <!-- New Recipe Modal end -->
+
+
+    <div class="container body-content">
+ 
         @RenderBody()
         <hr />
         <footer>
@@ -43,7 +48,6 @@
         </footer>
     </div>
 
-    
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/bootstrap-multiselect")
     @RenderSection("scripts", required: false)
