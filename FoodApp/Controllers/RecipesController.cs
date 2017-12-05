@@ -11,6 +11,7 @@ using FoodApp.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.IO;
+using FoodApp.SignalHubs;
 
 namespace FoodApp.Controllers
 {
@@ -51,6 +52,7 @@ namespace FoodApp.Controllers
             rvm.Recipe = new Recipe();
             rvm.Recipe.Author = User.Identity.Name;
             rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
             return View(rvm);
         }
 
@@ -79,10 +81,17 @@ namespace FoodApp.Controllers
             {
                 db.Recipes.Add(rvm.Recipe);
                 db.SaveChanges();
+                signalClientsAboutNewRecipe(rvm.Recipe);
                 return RedirectToAction("Index");
             }
 
             return RedirectToAction("Details", "Recipes");
+        }
+
+        private void signalClientsAboutNewRecipe(Recipe recipe)
+        {
+            RecipeHub hub = new RecipeHub();
+            hub.InformClientAboutNewRecipe(recipe);
         }
 
         // GET: Recipes/Edit/5
