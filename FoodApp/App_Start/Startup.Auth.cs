@@ -63,6 +63,10 @@ namespace FoodApp
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+
+            // [ SIGNAL R ] => maps a default SignalR route
+            app.MapSignalR();
         }
     }
 }
