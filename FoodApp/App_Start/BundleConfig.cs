@@ -34,7 +34,8 @@ namespace FoodApp
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-multiselect").Include(
                     "~/Scripts/bootstrap-multiselect.js"
                 ));
-
+            
+            // Angular App
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                    "~/Scripts/angular.js",
                    "~/Scripts/food_app.js"
@@ -44,8 +45,10 @@ namespace FoodApp
                     "~/Content/fontawesome.css"
                 ));
 
-
-
+            // SignalR
+            bundles.Add(new ScriptBundle("~/bundles/signal-r").Include(
+                   "~/Scripts/jquery.signalR-2.2.2.min.js"
+               ));
         }
     }
 }

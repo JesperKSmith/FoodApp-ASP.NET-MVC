@@ -9,7 +9,12 @@
     @Styles.Render("~/Content/bootstrap-multiselect-css")
     @Styles.Render("~/Content/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/signal-r")
+    <script src="/signalr/hubs"></script>
+    <script src="@Url.Content("/Scripts/signalr-controller.js")"></script>
+    
 
 </head>
 <body ng-app="foodApp" ng-controller="myCtrl">
