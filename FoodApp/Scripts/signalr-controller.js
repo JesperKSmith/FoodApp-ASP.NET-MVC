@@ -1,23 +1,27 @@
-﻿var recipeHub = $.connection.recipeHub;
+﻿
 
-$.connection.hub.start().done(function () {
-});
+        var recipeHub = $.connection.recipeHub;
 
-// Event Listener
-// Receives Events From Server When New Recipe is Created
-recipeHub.client.newRecipe = function (newRecipe) {
-    renderRecipeModal(newRecipe);
-}
+        $.connection.hub.start().done(function () {
+        });
 
-//-------------------------------------------------------------------
-// Helper Functions
-function renderRecipeModal(recipe) {
-    // bind recipe data
-    $("#new-recipe-title").text(recipe.title);
-    $("#new-recipe-picture").attr("src", recipe.picture);
-    $("#new-recipe-description").text(recipe.description);
-    $(".new-recipe-link").attr("href", "/Recipes/Details/"+recipe.id);
+        // Receives event from server When New Recipe is Created
+        recipeHub.client.newRecipe = function (newRecipe) {
+            renderRecipeModal(newRecipe);
+        }
 
-    // show modal
-    $('#myModal').modal('show');
-}
+        //-------------------------------------------------------------------
+        // Helper Functions
+        function renderRecipeModal(recipe) {
+            // bind recipe data
+            $("#new-recipe-title").text(recipe.title);
+            $("#new-recipe-picture").attr("src", recipe.picture);
+            $("#new-recipe-description").text(recipe.description);
+            $(".new-recipe-link").attr("href", "/Recipes/Details/"+recipe.id);
+
+            // show modal
+            $('#myModal').modal('show');
+        }
+
+
+

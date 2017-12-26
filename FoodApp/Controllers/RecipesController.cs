@@ -85,7 +85,7 @@ namespace FoodApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Details", "Recipes");
+            return View(rvm);
         }
 
         private void signalClientsAboutNewRecipe(Recipe recipe)
@@ -101,12 +101,19 @@ namespace FoodApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            RecipeViewModel rvm = new RecipeViewModel();
             Recipe recipe = db.Recipes.Find(id);
+            var tags = db.Tags.ToList();
+            rvm.Recipe = recipe;
+            rvm.Recipe.Author = User.Identity.Name;
+            rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+            
             if (recipe == null)
             {
                 return HttpNotFound();
             }
-            return View(recipe);
+            return View(rvm);
         }
 
         // POST: Recipes/Edit/5
@@ -114,15 +121,38 @@ namespace FoodApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,title,description")] Recipe recipe)
+        public ActionResult Edit(RecipeViewModel rvm)
         {
-            if (ModelState.IsValid)
+            var selectedTags = rvm.TagIds;
+            if (selectedTags != null)
             {
-                db.Entry(recipe).State = EntityState.Modified;
+                rvm.Recipe.Tags = db.Tags.Where(m => selectedTags.Contains(m.Id)).ToList();
+            }
+            else
+            {
+                rvm.Recipe.Tags = db.Tags.Where(m => m.Id == -1).ToList();
+            }
+            
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+            // If the request contains picture file
+            if (Request.Files.Count > 0)
+            {
+                rvm.Recipe.Picture = savedImageName();
+            }
+            else
+            {
+                rvm.Recipe.Picture = getDefaultPictureName();
+            }
+            
+            if (ModelState.IsValid)
+            {  
+                db.Entry(rvm.Recipe).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(recipe);
+
+            return RedirectToAction("Index");
         }
 
         // GET: Recipes/Delete/5
