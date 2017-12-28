@@ -28,6 +28,16 @@ namespace FoodApp.Controllers
             return View(recipes);
         }
 
+        // GET: Recipes
+        [AllowAnonymous]
+        public ActionResult ListByTag(Tag tag)
+        {
+
+            var recipes = db.Recipes.Where(r => r.Tags.Any(t => t.Id == tag.Id)).ToList();
+            // .Where(c => c.Books.Any(b => b.Id == theHumansAreDead.Id));
+            return View("Index", recipes);
+        }
+
         // GET: Recipes/Details/5
         [AllowAnonymous]
         public ActionResult Details(int? id)

@@ -1,4 +1,6 @@
-﻿body {
+﻿@import "RecipesIndex.css";
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -84,4 +86,21 @@ textarea {
 
 #new-recipe-description{
     margin-top: 10px;
+}
+
+
+.index-logo {
+    width: 60vw;
+    height: auto;
+}
+
+.nav-logo {
+    border-radius: 5px;
+    width: 30px;
+    margin-top: 4px;
+
+}
+
+.w3-container {
+    padding: 5vh;
 }
