@@ -120,3 +120,18 @@ textarea {
 #image-selector{
     display:none;
 }
+
+.index-logo {
+    width: 60vw;
+    height: auto;
+}
+
+.nav-logo {
+    border-radius: 5px;
+    width: 30px;
+    margin-top: 4px;
+}
+
+.w3-container {
+    padding: 5vh;
+}
