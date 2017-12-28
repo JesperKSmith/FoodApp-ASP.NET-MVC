@@ -21,6 +21,7 @@ namespace FoodApp.Models
         public string Description { get; set; }
 
         [Required]
+        [DataType(DataType.MultilineText)]
         public string Ingredients { get; set; }
 
         [Required]

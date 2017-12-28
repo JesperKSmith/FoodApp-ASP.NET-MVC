@@ -223,7 +223,7 @@
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Hubs\MyHub.cs" />
+    <Compile Include="Hubs\RecipeHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\RecipeViewModel.cs" />
   </ItemGroup>
@@ -241,6 +241,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\aaaa.jpg" />
+    <Content Include="Images\default.png" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -300,9 +302,9 @@
     <Content Include="Views\Recipes\Create.cshtml" />
     <Content Include="Views\Recipes\Delete.cshtml" />
     <Content Include="Views\Recipes\Details.cshtml" />
-    <Content Include="Views\Recipes\Edit.cshtml" />
     <Content Include="Views\Recipes\Index.cshtml" />
     <Content Include="Views\Shared\_newRecipeModal.cshtml" />
+    <Content Include="Views\Recipes\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,40 +1,77 @@
 ﻿@model FoodApp.Models.Recipe
 
-@{
-    ViewBag.Title = "Details";
-}
 
-<h2>Details</h2>
+
+<h3>@Model.Title</h3>
 
 <div>
-    <h4>Recipe</h4>
+    <div class="flex">
+        <h4>Recipe by: </h4>
+        <span class="recipe-author">@Model.Author</span>
+    </div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+    <dl class="dl-horizontal recipe-details">
+       <div class="recipe-details-row">
+           <dt>
+               @Html.DisplayNameFor(model => model.Title)
+           </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+           <dd>
+               @Html.DisplayFor(model => model.Title)
+           </dd>
+       </div>
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Picture)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture)
-        </dt>
+            <dd>
+                <img src="@Url.Content(Model.Picture)" style="max-width:400px" alt="Image" />
+            </dd>
+        </div>
+            
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
 
-        <dd>
-            <img src="@Url.Content(Model.Picture)" alt="Image" />
-        </dd>
-       
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Ingredients)
+            </dt>
 
-    </dl>
+            <dd class="recipe-ingridients">
+                @Html.DisplayFor(model => model.Ingredients)
+            </dd>
+        </div>
+            
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Tags)
+            </dt>
+
+            <dd>
+                @{
+                    var lastTag = Model.Tags.Last();
+                }
+                @foreach (var tag in Model.Tags)
+                {
+                    if (tag.Equals(lastTag))
+                    { <span>@tag.Name</span>}
+                    else
+                    { <span>@tag.Name, </span> }
+
+                }
+            </dd>
+        </div>
+            
+
+</dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
