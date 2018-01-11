@@ -9,6 +9,7 @@
     border-radius: 25px;
     text-align: center;
     background-color: #cfd8dc;
+    margin-bottom: 25px;
 }
 
 .recipe-card:hover {
@@ -17,10 +18,10 @@
 }
 
 .recipe-card-container {
-    display: flex;    
-    justify-content: space-around;
-    
-
+    display: flex;  
+    justify-content: space-between;  
+    flex-wrap: wrap;
+    //justify-content: space-around;
 }
 
 .recipe-card img {

@@ -4,29 +4,31 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Recipes</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create new recipe", "Create")
 </p>
 
 
-<div class="w3-container recipe-card-container">
+<div class="recipe-card-container">
     @foreach (var item in Model)
     {
-        <a href="@Url.Action("Details", "Recipes", new { id = item.Id })">
-            <div class="recipe-card">
-                <img src="@Url.Content(item.Picture)" alt="Image" />
-                <div class="recipe-card-text">
-                    <h4><b>@Html.DisplayFor(modelItem => item.Title)</b></h4>
-                    <p>@Html.DisplayFor(modelItem => item.Description)</p>
-                    @foreach (var tag in item.Tags)
+        <div>
+            <a href="@Url.Action("Details", "Recipes", new { id = item.Id })">
+                <div class="recipe-card">
+                    <img src="@Url.Content(item.Picture)" alt="Image" />
+                    <div class="recipe-card-text">
+                        <h4><b>@Html.DisplayFor(modelItem => item.Title)</b></h4>
+                        <p>@Html.DisplayFor(modelItem => item.Description)</p>
+                        @foreach (var tag in item.Tags)
                 {
-                        @Html.ActionLink(tag.Name, "ListByTag", "Recipes", tag, new { @class = "w3-button w3-round-large w3-amber w3-hover-indigo" })
-                    }
+                            @Html.ActionLink(tag.Name, "ListByTag", "Recipes", tag, new { @class = "w3-button w3-round-large w3-amber w3-hover-indigo" })
+                        }
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     }
 </div>
 @*<a href='https://www.freepik.com/free-vector/small-chef-illustration_800609.htm'>Graphics Designed by Freepik</a>*@
