@@ -126,7 +126,6 @@ namespace FoodApp.Controllers
                 rvm.Recipe = recipe;
                 rvm.Recipe.Author = User.Identity.Name;
                 rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-
                 if (recipe == null)
                 {
                     return HttpNotFound();
