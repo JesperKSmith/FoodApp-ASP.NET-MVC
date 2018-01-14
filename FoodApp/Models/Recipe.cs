@@ -25,6 +25,10 @@ namespace FoodApp.Models
         public string Ingredients { get; set; }
 
         [Required]
+        [DataType(DataType.MultilineText)]
+        public string Directions { get; set; }
+
+        [Required]
         public string Author { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; }

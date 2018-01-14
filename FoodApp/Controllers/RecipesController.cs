@@ -22,21 +22,45 @@ namespace FoodApp.Controllers
 
         // GET: Recipes
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Index(int? tagId)
         {
-            var recipes = db.Recipes.ToList();
+            var recipes = new List<Recipe>();
+
+            if(tagId != null)
+            {
+                recipes = db.Recipes.Where(r => r.Tags.Any(t => t.Id == tagId)).ToList();
+            }
+            else
+            {
+                recipes = db.Recipes.ToList();
+            }
+
+            var allTags = db.Tags.ToList();
+            ViewBag.allTags = allTags;
+
+            foreach (var recipe in recipes)
+            {
+                if (recipe.Description.Length > 150)
+                {
+                    recipe.Description = recipe.Description.Substring(0, 150);
+                }
+            }
+
             return View(recipes);
         }
 
-        // GET: Recipes
-        [AllowAnonymous]
-        public ActionResult ListByTag(Tag tag)
+        // GET: My Recipes
+        [Authorize]
+        public ActionResult MyRecipes()
         {
-
-            var recipes = db.Recipes.Where(r => r.Tags.Any(t => t.Id == tag.Id)).ToList();
-            // .Where(c => c.Books.Any(b => b.Id == theHumansAreDead.Id));
-            return View("Index", recipes);
+           var currentUser = User.Identity.Name;
+           var recipes = db.Recipes.Where(r => r.Author == currentUser).ToList();
+           
+            return View("MyRecipes", recipes);
         }
+
+
+        
 
         // GET: Recipes/Details/5
         [AllowAnonymous]
@@ -55,6 +79,7 @@ namespace FoodApp.Controllers
         }
 
         // GET: Recipes/Create
+        [Authorize]
         public ActionResult Create()
         {
             RecipeViewModel rvm = new RecipeViewModel();
@@ -71,10 +96,14 @@ namespace FoodApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(RecipeViewModel rvm)
         {
             var selectedTags = rvm.TagIds;
-            rvm.Recipe.Tags = db.Tags.Where(m => selectedTags.Contains(m.Id)).ToList();
+            if (selectedTags !=null && selectedTags.Length > 0)
+            {
+                rvm.Recipe.Tags = db.Tags.Where(m => selectedTags.Contains(m.Id)).ToList();
+            }
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
             // If the request contains picture file
@@ -105,20 +134,34 @@ namespace FoodApp.Controllers
         }
 
         // GET: Recipes/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            RecipeViewModel rvm = new RecipeViewModel();
+            // Find Recipe
             Recipe recipe = db.Recipes.Find(id);
+            // Check if Author is Owner of the Recipe
+            if (!isOwnerOfRecipe(recipe.Author)) { return RedirectToAction("Login", "Account"); }
+
+            RecipeViewModel rvm = new RecipeViewModel();
             var tags = db.Tags.ToList();
             rvm.Recipe = recipe;
             rvm.Recipe.Author = User.Identity.Name;
             rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-            
+
+            List<int> selectedTags = new List<int>();
+            foreach(var tag in rvm.Recipe.Tags)
+            {
+                selectedTags.Add(tag.Id);
+            }
+
+            ViewBag.recipeSelectedTagsIds = selectedTags;
+
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -131,41 +174,40 @@ namespace FoodApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(RecipeViewModel rvm)
         {
+
+            //Get original ninja from context
+            Recipe recipe = db.Recipes.Find(rvm.Recipe.Id);
+            db.Entry(recipe).CurrentValues.SetValues(rvm.Recipe);
+            recipe.Tags.Clear();
+
             var selectedTags = rvm.TagIds;
-            if (selectedTags != null)
+            if (selectedTags != null &&  selectedTags.Length != rvm.Recipe.Tags.Count)
             {
-                rvm.Recipe.Tags = db.Tags.Where(m => selectedTags.Contains(m.Id)).ToList();
+                foreach (var item in selectedTags)
+                {
+                    Tag tag = db.Tags.Find(item);
+                    recipe.Tags.Add(tag);
+                }
             }
-            else
-            {
-                rvm.Recipe.Tags = db.Tags.Where(m => m.Id == -1).ToList();
-            }
-            
+
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
             // If the request contains picture file
             if (Request.Files.Count > 0)
             {
-                rvm.Recipe.Picture = savedImageName();
+                recipe.Picture = savedImageName(recipe.Picture);
             }
-            else
-            {
-                rvm.Recipe.Picture = getDefaultPictureName();
-            }
-            
-            if (ModelState.IsValid)
-            {  
-                db.Entry(rvm.Recipe).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+            db.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
         // GET: Recipes/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -177,12 +219,17 @@ namespace FoodApp.Controllers
             {
                 return HttpNotFound();
             }
+
+            // Check if Author is Owner of the Recipe
+            if (!isOwnerOfRecipe(recipe.Author)) { return RedirectToAction("Login", "Account"); }
+
             return View(recipe);
         }
 
         // POST: Recipes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
             Recipe recipe = db.Recipes.Find(id);
@@ -203,6 +250,7 @@ namespace FoodApp.Controllers
         // TAG FUN TIME
         // POST
         [HttpPost]
+        [Authorize]
         public ActionResult AddTag(RecipeViewModel rvm)
         {
             Tag tempTag = new Tag();
@@ -217,7 +265,7 @@ namespace FoodApp.Controllers
         // PRIVATE FUNCTIONS
 
         // SAVE IMAGE
-        private string savedImageName()
+        private string savedImageName(string originalPicture = "")
         {
             var file = Request.Files[0];
             string pictureName = "";
@@ -227,6 +275,7 @@ namespace FoodApp.Controllers
             if (!pictureType.Contains("image"))
             {
                 var notImage = true;
+                return originalPicture;
             }
             else
             {
@@ -240,12 +289,21 @@ namespace FoodApp.Controllers
                 file.SaveAs(pathToFile);
             }
 
+            if(pictureName == "") { pictureName = "default.png"; }
+
             return "~/Images/" + pictureName;
         }
+        
 
         private string getDefaultPictureName()
         {
             return "~/Images/default.png";
+        }
+
+        // Is Owner of the recipe
+        private bool isOwnerOfRecipe(string authorName)
+        {
+            return User.Identity.Name == authorName;
         }
 
     }

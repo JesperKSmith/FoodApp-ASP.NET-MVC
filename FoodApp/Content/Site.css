@@ -32,6 +32,9 @@ textarea {
 .ml10{
    margin-left: 10px;
 }
+.ml5{
+    margin-left: 5px;
+}
 
 .add-tag{
     padding: 6px;
@@ -136,4 +139,130 @@ textarea {
 
 .w3-container {
     padding: 5vh;
+}
+
+/* NIKO CSS */
+
+.my-recipes-container{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.my-recipe{
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.card{
+     background: #fff;
+      border-radius: 2px;
+      display: inline-block;
+      min-height: 200px;
+      margin: 1rem;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.my-recipe-image{
+    width: 100%;
+}
+
+.my-recipe-title{
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    color: grey;
+}
+
+.my-recipe-description{
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.tags-container{
+    display: flex;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.tags-container h3 {
+    margin-right: 15px;
+}
+
+.my-tag{
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.my-tag{
+    color: #2196F3;
+}
+
+.my-tag:not(:last-child)::after { 
+    content: ", ";
+}
+
+.new-recipe-creator{
+    display: flex;
+    justify-content: space-between;
+    width: 93%;
+    align-items: center;
+}
+
+.new-recipe-creator a{
+
+}
+
+.mt50{
+    margin-top: 20px;
+}
+
+.max-form-width{
+    max-width: none !important;
+}
+
+input, select, textarea {
+    max-width: none !important;
+}
+
+textarea {
+    width: 100% !important;
+}
+
+@media (max-width: 699px) {
+    .my-recipe{
+        width: 100%;
+    }
+
+    .body{
+        max-width:699px;
+    }
+}
+
+@media (min-width: 700px) {
+    .my-recipe{
+        width: 45%;
+    }
+}
+
+@media (min-width: 950px) {
+    .my-recipe{
+        width: 29%;
+    }
+}
+
+@media (min-width: 1500px) {
+    .my-recipe{
+        width: 21%;
+    }
 }

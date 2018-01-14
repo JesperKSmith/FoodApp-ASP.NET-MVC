@@ -4,36 +4,46 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<div class="alert alert-danger">
+    <h3><strong>Attention! </strong></h3> You are about to delete the  '@Model.Title' recipe...
+    <br />
+    <strong>This operation is irreversible</strong>
+</div>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this recipe?</h3>
+
 <div>
-    <h4>Recipe</h4>
+    
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+    <dl class="dl-horizontal recipe-details">
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+        </div>
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Picture)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
+            <dd>
+                <img src="@Url.Content(Model.Picture)" style="max-width:400px" alt="Image" />
+            </dd>
+        </div>
     </dl>
+</div>
+
+<div>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Yes, this recipe" class="btn btn-danger" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

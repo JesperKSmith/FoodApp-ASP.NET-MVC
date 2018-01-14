@@ -4,18 +4,19 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
-
+<h2>Edit @Model.Recipe.Title resipe...</h2>
 @using (Html.BeginForm("Edit", "Recipes", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Recipe</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Recipe.Id)
         @Html.HiddenFor(model => model.Recipe.Author)
+        @Html.HiddenFor(model => model.Recipe.Tags)
+        @Html.HiddenFor(model => model.Recipe.Picture)
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.Recipe.Title, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -42,6 +43,14 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Recipe.Directions, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Recipe.Directions, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Recipe.Directions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.Recipe.Author, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Model.Recipe.Author
@@ -52,37 +61,66 @@
             <label class="control-label col-md-2" for="Recipe_Author">Selected tags</label>
             <div class="col-md-10">
                 @{
-                   var lastTag = Model.Recipe.Tags.Last();
-                }
-                @foreach (var tag in Model.Recipe.Tags)
-                {
-                    if (tag.Equals(lastTag))
-                    { <span>@tag.Name</span>}
-                    else
-                    { <span>@tag.Name, </span> }
+                    if (Model.Recipe.Tags != null && Model.Recipe.Tags.Count > 0)
+                    {
 
+                        var lastTag = Model.Recipe.Tags.Last();
+
+                        foreach (var tag in Model.Recipe.Tags)
+                        {
+                            if (tag.Equals(lastTag))
+                            { <span>@tag.Name</span>}
+                            else
+                            { <span>@tag.Name, </span> }
+
+                        }
+                    }
                 }
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.Recipe.Tags, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.ListBoxFor(model => model.TagIds, Model.AllTags, new { @class = "listbox", @multiple = "multiple" })
             </div>
+        </div>*@
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Recipe.Tags, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select id="example-getting-started" class="listbox" multiple="multiple" name="TagIds">
+                    @{
+                        foreach (var tag in Model.AllTags)
+                        {
+                            bool isSelectedTag = ViewBag.recipeSelectedTagsIds.Contains(Int32.Parse(tag.Value));
+                            if (isSelectedTag)
+                            {
+                                <option value="@tag.Value" selected>@tag.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@tag.Value">@tag.Text</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
         </div>
+        
 
         <div class="form-group">
             @Html.LabelFor(model => model.Recipe.Picture, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <img src="@Url.Content(Model.Recipe.Picture)" style="max-width:400px" alt="Image" class="recipe-image-changer"/>
-                <input id="image-selector" type="file" name="file" accept="image/x-png,image/gif,image/jpeg" class="btn-image-select" />
+                <input id="image-change-selector" type="file" name="file" accept="image/x-png,image/gif,image/jpeg" class="btn-image-change" />
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-success" />
             </div>
         </div>
     </div>
@@ -103,20 +141,17 @@
 
     // Open file ipload dialog on old image click
     $(".recipe-image-changer").on("click", function () {
-        $("#image-selector").trigger("click");
+        $("#image-change-selector").trigger("click");
     });
 
     // IMAGE UPLOAD
-    $(document).on("change", "#image-selector", function () {
+    $(document).on("change", ".btn-image-change", function () {
 
-        console.log("IMAGE UPLOAD change");
 
         var reader = new FileReader();
         reader.readAsDataURL(this.files[0]);
 
         reader.onload = function (e) {
-            console.log("IMAGE UPLOAD reader.onload");
-            console.log(e.target.result);
 
             $('.recipe-image-changer').attr("src", e.target.result);
         }

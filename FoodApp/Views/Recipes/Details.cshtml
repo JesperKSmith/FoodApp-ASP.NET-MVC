@@ -26,7 +26,7 @@
             </dt>
 
             <dd>
-                <img src="@Url.Content(Model.Picture)" style="max-width:400px" alt="Image" />
+                <img src="@Url.Content(Model.Picture)" style="max-width:400px; border: solid 1px rgba(3, 169, 244, 0.22);" alt="Image" />
             </dd>
         </div>
             
@@ -49,6 +49,16 @@
                 @Html.DisplayFor(model => model.Ingredients)
             </dd>
         </div>
+
+        <div class="recipe-details-row">
+            <dt>
+                @Html.DisplayNameFor(model => model.Directions)
+            </dt>
+
+            <dd class="recipe-ingridients">
+                @Html.DisplayFor(model => model.Directions)
+            </dd>
+        </div>
             
         <div class="recipe-details-row">
             <dt>
@@ -57,15 +67,20 @@
 
             <dd>
                 @{
-                    var lastTag = Model.Tags.Last();
-                }
-                @foreach (var tag in Model.Tags)
-                {
-                    if (tag.Equals(lastTag))
-                    { <span>@tag.Name</span>}
-                    else
-                    { <span>@tag.Name, </span> }
+                    if (Model.Tags != null && Model.Tags.Count>0)
+                    {
 
+                        var lastTag = Model.Tags.Last();
+
+                        foreach (var tag in Model.Tags)
+                        {
+                            if (tag.Equals(lastTag))
+                            { <span>@tag.Name</span>}
+                            else
+                            { <span>@tag.Name, </span> }
+
+                        }
+                    }
                 }
             </dd>
         </div>
@@ -73,7 +88,12 @@
 
 </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+<p> 
+
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    @if (Request.IsAuthenticated && Model.Author == User.Identity.Name)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-success ml10" })
+        @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger ml5" })
+    }
 </p>

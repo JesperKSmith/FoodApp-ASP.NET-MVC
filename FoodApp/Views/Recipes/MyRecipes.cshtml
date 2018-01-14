@@ -1,32 +1,8 @@
 ﻿@model IEnumerable<FoodApp.Models.Recipe>
 
-@{
-    ViewBag.Title = "Index";
-}
 <div class="mt50">
-    <div class="new-recipe-creator">
-        <h2>
-            <a href="@Url.Action("Index", "Recipes")">Recipes</a>
-        </h2>
-        @Html.ActionLink("Create new recipe", "Create", null, new { @class = "btn btn-primary" })
-    </div>
-
+    <h3>My Recipes</h3>
     
-    <div class="tags-container">
-        <h3>Tags:</h3>
-        @{
-            if (ViewBag.allTags != null)
-            {
-                foreach (var tag in ViewBag.allTags)
-                {
-                    <div class="my-tag">
-                        <a href="@Url.Action("Index", "Recipes", new { tagId = tag.Id })">@tag.Name</a>
-                    </div>
-                }
-            }
-        }
-    </div>
-
     <div class="my-recipes-container">
         @{
             if (Model.Count() > 0)
@@ -43,14 +19,25 @@
                         <div class="my-recipe-description">@Html.DisplayFor(modelItem => item.Description)</div>
                     </div>
                 }
-            }else
+            }
+            else
             {
-                <h4>The are no recipes do display....</h4>
+               <div>
+                   <div>
+                       
+                       <div class="alert alert-warning">
+                           <h4><strong>Hey Chef !</strong> Looks like you have no recipes yet.....Create one by clicking on the below button</h4>
+                       </div>
+                   </div>
+                   <div>
+                       @Html.ActionLink("Create new Recipe", "Create", "Recipes", null, new { @class = "btn btn-success" })
+                   </div>
+               </div>
             }
 
         }
     </div>
-     
+
     <!-- old view -->
     <!--
     <div class="recipe-card-container">

@@ -13,8 +13,5 @@ namespace FoodApp.ViewModels
         public IEnumerable<SelectListItem> AllTags { get; set; }
         public int[] TagIds { get; set; }
         public Tag Tag { get; set; }
-
-
-
     }
 }
