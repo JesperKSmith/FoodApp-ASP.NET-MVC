@@ -104,6 +104,11 @@ namespace FoodApp.Controllers
             hub.InformClientAboutNewRecipe(recipe);
         }
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult AdminTest()
+        {
+            return View();
+        }
         // GET: Recipes/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -125,6 +130,8 @@ namespace FoodApp.Controllers
             }
             return View(rvm);
         }
+
+        
 
         // POST: Recipes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

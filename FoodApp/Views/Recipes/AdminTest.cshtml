@@ -1,0 +1,11 @@
+﻿
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <div>User is authenticated</div>
+}
+@if (User.IsInRole("Admin"))
+{
+    <div>User is admin</div>
+}
+

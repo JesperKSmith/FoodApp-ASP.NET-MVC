@@ -305,6 +305,7 @@
     <Content Include="Views\Recipes\Index.cshtml" />
     <Content Include="Views\Shared\_newRecipeModal.cshtml" />
     <Content Include="Views\Recipes\Edit.cshtml" />
+    <Content Include="Views\Recipes\AdminTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
