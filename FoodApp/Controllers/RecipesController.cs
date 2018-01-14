@@ -116,19 +116,26 @@ namespace FoodApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
 
             RecipeViewModel rvm = new RecipeViewModel();
             Recipe recipe = db.Recipes.Find(id);
-            var tags = db.Tags.ToList();
-            rvm.Recipe = recipe;
-            rvm.Recipe.Author = User.Identity.Name;
-            rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-            
-            if (recipe == null)
+            if (User.Identity.Name == recipe.Author || User.IsInRole("Admin"))
             {
-                return HttpNotFound();
+                var tags = db.Tags.ToList();
+                rvm.Recipe = recipe;
+                rvm.Recipe.Author = User.Identity.Name;
+                rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+                if (recipe == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(rvm);
             }
-            return View(rvm);
+            // Should alert the user that they are not authorized to edit the recipe
+            return RedirectToAction("Index");
+            
         }
 
         
