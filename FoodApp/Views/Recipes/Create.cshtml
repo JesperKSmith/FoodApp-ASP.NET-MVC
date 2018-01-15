@@ -77,8 +77,10 @@
 }
 
 
+@Html.Partial("_CreateTag", new FoodApp.Models.Tag());
+
  <!-- CREATE TAG SECTION -->
-<div ng-if="showTagCreateForm" class="form-horizontal new-tag-section">
+@*<div ng-if="showTagCreateForm" class="form-horizontal new-tag-section">
     <hr />
     @using (Html.BeginForm("AddTag", "Recipes"))
             {
@@ -99,7 +101,7 @@
         }
     }
     <hr />
-</div>
+</div>*@
 
 
   

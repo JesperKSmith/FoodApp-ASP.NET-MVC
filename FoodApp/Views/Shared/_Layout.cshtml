@@ -35,9 +35,11 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("View Recipes", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @if(this.User.Identity.IsAuthenticated){
+                        <li>@Html.ActionLink("View Recipes", "Index", "Recipes")</li>
+                        <li>@Html.ActionLink("Create Recipe", "Create", "Recipes")</li>
+                    }
+                    
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

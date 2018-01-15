@@ -23,7 +23,7 @@
                         <p>@Html.DisplayFor(modelItem => item.Description)</p>
                         @foreach (var tag in item.Tags)
                 {
-                            @Html.ActionLink(tag.Name, "ListByTag", "Recipes", tag, new { @class = "w3-button w3-round-large w3-amber w3-hover-indigo" })
+                            @Html.ActionLink(tag.Name, "ListByTag", "Recipes", tag, new { @class = "w3-button w3-round-large w3-amber w3-hover-indigo tester" })
                         }
                     </div>
                 </div>

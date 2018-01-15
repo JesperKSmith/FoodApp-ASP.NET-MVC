@@ -226,6 +226,7 @@
     <Compile Include="Hubs\RecipeHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\RecipeViewModel.cs" />
+    <Compile Include="ViewModels\TagViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\aspnet-FoodApp-20171128025041.mdf" />
@@ -310,6 +311,7 @@
     <Content Include="Views\Shared\_newRecipeModal.cshtml" />
     <Content Include="Views\Recipes\Edit.cshtml" />
     <Content Include="Views\Recipes\AdminTest.cshtml" />
+    <Content Include="Views\Shared\_CreateTag.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -61,6 +61,7 @@ namespace FoodApp.Controllers
             var tags = db.Tags.ToList();
             rvm.Recipe = new Recipe();
             rvm.Recipe.Author = User.Identity.Name;
+            ViewBag.tag = rvm.Tag;
             rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             return View(rvm);
@@ -89,7 +90,7 @@ namespace FoodApp.Controllers
 
             if (ModelState.IsValid)
             {
-                db.Recipes.Add(rvm.Recipe);
+                db.Recipes.Add(rvm.Recipe);                
                 db.SaveChanges();
                 signalClientsAboutNewRecipe(rvm.Recipe);
                 return RedirectToAction("Index");
@@ -110,34 +111,45 @@ namespace FoodApp.Controllers
             return View();
         }
         // GET: Recipes/Edit/5
+        // GET: Recipes/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
 
             RecipeViewModel rvm = new RecipeViewModel();
             Recipe recipe = db.Recipes.Find(id);
-            if (User.Identity.Name == recipe.Author || User.IsInRole("Admin"))
+
+            // Check if Author is Owner of the Recipe
+            if(User.Identity.Name == recipe.Author || User.IsInRole("Admin"))
             {
                 var tags = db.Tags.ToList();
                 rvm.Recipe = recipe;
                 rvm.Recipe.Author = User.Identity.Name;
                 rvm.AllTags = tags.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+                List<int> selectedTags = new List<int>();
+                foreach (var tag in rvm.Recipe.Tags)
+                {
+                    selectedTags.Add(tag.Id);
+                }
+
+                ViewBag.recipeSelectedTagsIds = selectedTags;
+
                 if (recipe == null)
                 {
                     return HttpNotFound();
                 }
                 return View(rvm);
             }
-            // Should alert the user that they are not authorized to edit the recipe
-            return RedirectToAction("Index");
-            
+            return RedirectToAction("Index");            
         }
 
-        
+
 
         // POST: Recipes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -146,34 +158,31 @@ namespace FoodApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(RecipeViewModel rvm)
         {
+
+            //Get original ninja from context
+            Recipe recipe = db.Recipes.Find(rvm.Recipe.Id);
+            db.Entry(recipe).CurrentValues.SetValues(rvm.Recipe);
+            recipe.Tags.Clear();
+
             var selectedTags = rvm.TagIds;
-            if (selectedTags != null)
+            if (selectedTags != null && selectedTags.Length != rvm.Recipe.Tags.Count)
             {
-                rvm.Recipe.Tags = db.Tags.Where(m => selectedTags.Contains(m.Id)).ToList();
+                foreach (var item in selectedTags)
+                {
+                    Tag tag = db.Tags.Find(item);
+                    recipe.Tags.Add(tag);
+                }
             }
-            else
-            {
-                rvm.Recipe.Tags = db.Tags.Where(m => m.Id == -1).ToList();
-            }
-            
+
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
             // If the request contains picture file
             if (Request.Files.Count > 0)
             {
-                rvm.Recipe.Picture = savedImageName();
+                recipe.Picture = savedImageName(recipe.Picture);
             }
-            else
-            {
-                rvm.Recipe.Picture = getDefaultPictureName();
-            }
-            
-            if (ModelState.IsValid)
-            {  
-                db.Entry(rvm.Recipe).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+            db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -225,12 +234,23 @@ namespace FoodApp.Controllers
             return RedirectToAction("Create", "Recipes");
         }
 
+        // POST
+        [HttpPost]
+        public ActionResult TestAddTag(Tag tag)
+        {
+            Tag tempTag = new Tag();
+            tempTag.Name = tag.Name;
+            db.Tags.Add(tempTag);
+            db.SaveChanges();
+            return RedirectToAction("Create", "Recipes");
+        }
+
 
         // ======================================================================
         // PRIVATE FUNCTIONS
 
         // SAVE IMAGE
-        private string savedImageName()
+        private string savedImageName(string originalPicture = "")
         {
             var file = Request.Files[0];
             string pictureName = "";
@@ -240,6 +260,7 @@ namespace FoodApp.Controllers
             if (!pictureType.Contains("image"))
             {
                 var notImage = true;
+                return originalPicture;
             }
             else
             {
@@ -253,12 +274,21 @@ namespace FoodApp.Controllers
                 file.SaveAs(pathToFile);
             }
 
+            if (pictureName == "") { pictureName = "default.png"; }
+
             return "~/Images/" + pictureName;
         }
+
 
         private string getDefaultPictureName()
         {
             return "~/Images/default.png";
+        }
+
+        // Is Owner of the recipe
+        private bool isOwnerOfRecipe(string authorName)
+        {
+            return User.Identity.Name == authorName;
         }
 
     }

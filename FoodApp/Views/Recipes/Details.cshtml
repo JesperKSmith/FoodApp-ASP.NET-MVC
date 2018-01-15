@@ -57,16 +57,23 @@
 
             <dd>
                 @{
-                    var lastTag = Model.Tags.Last();
-                }
-                @foreach (var tag in Model.Tags)
-                {
-                    if (tag.Equals(lastTag))
-                    { <span>@tag.Name</span>}
-                    else
-                    { <span>@tag.Name, </span> }
+                    if (Model.Tags != null && Model.Tags.Count > 0)
+                    {
+                        var lastTag = Model.Tags.Last();
+
+                        foreach (var tag in Model.Tags)
+                        {
+                            if (tag.Equals(lastTag))
+                            { <span>@tag.Name</span>}
+                            else
+                            { <span>@tag.Name, </span> }
+
+                        }
+                    }
+
 
                 }
+                
             </dd>
         </div>
             
